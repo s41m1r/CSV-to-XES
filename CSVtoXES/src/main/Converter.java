@@ -183,7 +183,7 @@ public class Converter {
 		xLog.getClassifiers().add(new XEventNameClassifier());
 		
 		concExt.assignName(xLog, "Synthetic log");
-		//lifeExtension.assignModel(xLog, XLifecycleExtension.VALUE_MODEL_STANDARD);
+		lifeExtension.assignModel(xLog, XLifecycleExtension.VALUE_MODEL_STANDARD);
 		//int traceCounter = 0;
 		//Remember the last case Id seen 		
 		String lastSeenTrace = "";//no case seen
@@ -193,7 +193,7 @@ public class Converter {
 			// When I find a new new UserId (representing the Case Id) I create a new trace 
 			if(!lastSeenTrace.equals(trace.getTrace())){
 				xTrace = xFactory.createTrace();
-				//concExt.assignName(xTrace, "Trace no. "+(++traceCounter));
+				//concExt.assign(xTrace, "Trace no. "+(++traceCounter));
 				concExt.assignName(xTrace, trace.getTrace()+"");
 				lastSeenTrace = trace.getTrace();
 				xLog.add(xTrace);
@@ -202,7 +202,8 @@ public class Converter {
 			//Create the event within the current trace
 			xEvent = xFactory.createEvent();
 		   concExt.assignName(xEvent, trace.getConceptName()+"");
-		   lifeExtension.assignTransition(xEvent, trace.getLifecycle());
+		   //lifeExtension.assignTransition(xEvent, trace.getLifecycle());
+		   lifeExtension.assignStandardTransition(xEvent, XLifecycleExtension.StandardModel.COMPLETE);
 		   timeExtension.assignTimestamp(xEvent, trace.getTimestamp());
 			xTrace.add(xEvent);
 		}//end loop
