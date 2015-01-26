@@ -21,8 +21,6 @@ public class TestReadAllConfigProps {
 	      // TODO Auto-generated catch block
 	      e.printStackTrace();
       }
-	   
 	   System.out.println(props);
    }
-
 }

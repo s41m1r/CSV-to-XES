@@ -7,8 +7,12 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.sql.Timestamp;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+import model.GenericTrace;
 import model.MinerfulTrace;
 
 import org.apache.commons.cli.CommandLine;
@@ -22,16 +26,22 @@ import org.apache.commons.cli.ParseException;
 import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.extension.std.XLifecycleExtension;
+import org.deckfour.xes.extension.std.XOrganizationalExtension;
 import org.deckfour.xes.extension.std.XTimeExtension;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryBufferedImpl;
+import org.deckfour.xes.info.impl.XTimeBoundsImpl;
+import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.deckfour.xes.model.impl.XAttributeMapImpl;
 import org.deckfour.xes.out.XesXmlSerializer;
 
+import parser.GenericParser;
 import parser.MinerfulTraceParser;
 
+import com.googlecode.jcsv.reader.CSVEntryParser;
 import com.googlecode.jcsv.reader.CSVReader;
 import com.googlecode.jcsv.reader.internal.CSVReaderBuilder;
 
@@ -83,8 +93,10 @@ public class Converter {
 			help.printHelp("Converter", options, true);
 		}
 		
-		List<MinerfulTrace> traces = readGenericLog(inputFile);
-		XLog log = toXlog(traces);
+		//List<MinerfulTrace> traces = readGenericLog(inputFile);
+		List<GenericTrace> gtraces = readGenericLog2(inputFile);
+		//XLog log = toXlog(traces);
+		XLog log = toXlog2(gtraces);
 		
 //		List<EclipseDataEntry> dataEntries = readEclipseLog(inputFile);
 //		XLog log = convertEclispeDataEntries(dataEntries);
@@ -112,6 +124,16 @@ public class Converter {
 				new MinerfulTraceParser(TRACE_COLUMN, CONCEPT_COLUMN, LIFECYCLE_COLUMN, TIMESTAMP_COLUMN);//The numbers must be passed as parameters
 		CSVReader<MinerfulTrace> csvTraceReader = new CSVReaderBuilder<MinerfulTrace>(reader).entryParser(minerfulTraceParser).build();
 		List<MinerfulTrace> traces = csvTraceReader.readAll();
+		
+		return traces;
+		
+	}
+	
+	private static List<GenericTrace> readGenericLog2(String filename) throws IOException{
+		Reader reader = new FileReader(filename); 
+		GenericParser genericTraceParser = new GenericParser();
+		CSVReader<GenericTrace> csvTraceReader = new CSVReaderBuilder<GenericTrace>(reader).entryParser(genericTraceParser).build();
+		List<GenericTrace> traces = csvTraceReader.readAll();
 		
 		return traces;
 		
@@ -210,7 +232,56 @@ public class Converter {
 		
 		return xLog;
 	}
-	
+
+	//TODO: new	
+	private static XLog toXlog2(List<GenericTrace> traces){
+		if(traces == null)
+			return null;
+		
+		XFactory xFactory = new XFactoryBufferedImpl();
+		XLog xLog = xFactory.createLog();
+		
+		XTrace xTrace = null;
+		XEvent xEvent = null;
+		XConceptExtension concExt = XConceptExtension.instance();
+		XLifecycleExtension lifeExtension = XLifecycleExtension.instance();
+		XTimeExtension timeExtension = XTimeExtension.instance();
+		XOrganizationalExtension orgExt = XOrganizationalExtension.instance();
+		xLog.getExtensions().add(concExt);
+		xLog.getExtensions().add(lifeExtension);
+		xLog.getExtensions().add(timeExtension);
+		xLog.getExtensions().add(orgExt);
+		xLog.getClassifiers().add(new XEventNameClassifier());
+		
+		concExt.assignName(xLog, "Synthetic log");
+		lifeExtension.assignModel(xLog, XLifecycleExtension.VALUE_MODEL_STANDARD);
+		//int traceCounter = 0;
+		//Remember the last case Id seen 		
+		String lastSeenTrace = "";//no case seen
+		
+		for (GenericTrace trace : traces) {
+			
+			// When I find a new new UserId (representing the Case Id) I create a new trace 
+			if(!lastSeenTrace.equals(trace.getTraceColumn())){
+				xTrace = xFactory.createTrace();
+				//concExt.assign(xTrace, "Trace no. "+(++traceCounter));
+				concExt.assignName(xTrace, trace.getTraceColumn()+"");
+				lastSeenTrace = trace.getTraceColumn();
+				xLog.add(xTrace);
+			}
+			
+			//Create the event within the current trace
+			xEvent = xFactory.createEvent();
+		   concExt.assignName(xEvent, trace.getConceptNameColumn()+"");
+		   //lifeExtension.assignTransition(xEvent, trace.getLifecycle());
+		   lifeExtension.assignStandardTransition(xEvent, XLifecycleExtension.StandardModel.COMPLETE);
+		   timeExtension.assignTimestamp(xEvent, Timestamp.valueOf(trace.getTimestampColumn()));
+		   orgExt.assignResource(xEvent, trace.getResourceColumn());
+			xTrace.add(xEvent);
+		}//end loop
+		
+		return xLog;
+	}
 	private static void toXESfile(File file, XLog xLog) throws FileNotFoundException, IOException {
 		if(xLog == null) 
 			return;
