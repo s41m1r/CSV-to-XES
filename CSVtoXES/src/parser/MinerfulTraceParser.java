@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import model.MinerfulTrace;
 
@@ -41,15 +40,19 @@ public class MinerfulTraceParser implements CSVEntryParser<MinerfulTrace> {
 
 			String delims = "[ \\+]"; // so the delimiters are:  + - * / ^ space
 			String[] tokens = ts.split(delims);
-			String theDate = tokens[0]+"T"+tokens[1]+"";
+			String theDate = tokens[0];
 			
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			if(tokens.length > 1)
+				theDate+="T"+tokens[1]+"";
+			
+			//SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 	      Calendar cal = Calendar.getInstance();
          
 	      try {
 	         Date d = formatter.parse(theDate);
 	         cal.setTime(d);
-	         cal.setTimeZone(TimeZone.getTimeZone("GMT"+tokens[2]));
+	         //cal.setTimeZone(TimeZone.getTimeZone("GMT"+tokens[2]));
          } catch (ParseException e) {
 	         // TODO Auto-generated catch block
 	         e.printStackTrace();

@@ -3,6 +3,8 @@ package config;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class ConfigManager {
@@ -36,5 +38,13 @@ public class ConfigManager {
 			}
 		}
 		return null;
+	}
+	
+	public static Map<String, String> getAllProperties() throws IOException{
+		Properties properties = new Properties();
+		FileInputStream in = new FileInputStream(PATH);
+		properties.load(in);
+		in.close();
+		return new HashMap<String, String>((Map) properties);
 	}
 }
