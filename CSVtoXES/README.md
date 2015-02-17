@@ -1,5 +1,5 @@
 What it does:
-=============
+-------------
 It takes a .csv file as input and gives a .xes file as output
 
 
