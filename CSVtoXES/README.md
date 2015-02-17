@@ -9,7 +9,7 @@ Conditions
 The .csv file must:
 
 1. Have values separated by comma or semicolon, and quoted text fields
-3. Have the time stamp formatted as either long integer or   date values
+2. Have the time stamp formatted as either long integer or   date values
 
 
 How to run:
