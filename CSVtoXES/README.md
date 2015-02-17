@@ -4,7 +4,7 @@ It takes a .csv file as input and gives a .xes file as output
 
 
 Conditions
-==========
+----------
 
 The .csv file must:
 
@@ -13,7 +13,7 @@ The .csv file must:
 
 
 How to run:
-===========
+----------
 
 1. edit the mapping.properties file to specify which rows of the .csv you want to map to <trace number, concept, lifecycle, timestamp>
 2. run it like 
