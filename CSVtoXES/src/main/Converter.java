@@ -10,8 +10,6 @@ import java.io.Reader;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import model.GenericTrace;
 import model.MinerfulTrace;
 
@@ -30,18 +28,14 @@ import org.deckfour.xes.extension.std.XOrganizationalExtension;
 import org.deckfour.xes.extension.std.XTimeExtension;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryBufferedImpl;
-import org.deckfour.xes.info.impl.XTimeBoundsImpl;
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
-import org.deckfour.xes.model.impl.XAttributeMapImpl;
 import org.deckfour.xes.out.XesXmlSerializer;
 
 import parser.GenericParser;
 import parser.MinerfulTraceParser;
 
-import com.googlecode.jcsv.reader.CSVEntryParser;
 import com.googlecode.jcsv.reader.CSVReader;
 import com.googlecode.jcsv.reader.internal.CSVReaderBuilder;
 
