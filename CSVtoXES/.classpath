@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry including="**/*.java" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="M2_REPO/com/googlecode/jcsv/jcsv/1.4.0/jcsv-1.4.0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.4/commons-io-2.4.jar" sourcepath="M2_REPO/commons-io/commons-io/2.4/commons-io-2.4-sources.jar">
+	<classpathentry kind="src" output="target/classes" path="src">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/home/saimir/.m2/repository/commons-io/commons-io/2.4/commons-io-2.4-javadoc.jar!/"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/commons-cli/commons-cli/1.2/commons-cli-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/OpenXES-XStream.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/OpenXES.jar"/>
+	<classpathentry kind="lib" path="lib/Spex.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
